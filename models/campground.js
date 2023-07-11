@@ -3,11 +3,12 @@ const Schema = mongooes.Schema;
 
 const CampgroundSchema = new Schema({
     title: String,
-    price: String,
+    price: Number,
     description: String,
     location: String,
     rank : String,
-    state: String
+    state: String,
+    img: String
 });
 
 module.exports = mongooes.model('Campground', CampgroundSchema);

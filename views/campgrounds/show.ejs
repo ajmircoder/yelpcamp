@@ -1,16 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Show</title>
-</head>
-
-<body>
+<% layout('/layouts/boilerplate') %>
     <h1>
         <%= campgrounds.title %>
     </h1>
+    <img src="<%=campgrounds.img %>" alt="">
+    <h3><%= campgrounds.description %></h3>
     <h2>
         <%= `${campgrounds.state} ${campgrounds.location}` %>
     </h2>
@@ -20,7 +13,3 @@
     <form action="/campgrounds/<%= campgrounds._id %>?_method=DELETE" method="post">
         <button>delete</button>
     </form>
-
-</body>
-
-</html>

@@ -4,7 +4,8 @@ const Campground = require('./models/campground')
 const mongooes = require('mongoose');
 const path = require('path')
 const methodOverride = require('method-override');
-const morgan = require('morgan')
+const morgan = require('morgan');
+const ejsEngine = require('ejs-mate')
 
 
 mongooes.connect('mongodb://127.0.0.1:27017/yelpcamp')
@@ -20,12 +21,13 @@ mongooes.connect('mongodb://127.0.0.1:27017/yelpcamp')
 // })
 
 const app = express();
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
+app.engine('ejs', ejsEngine)
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-
 
 const port = process.env.port || 8000;
 
@@ -54,38 +56,41 @@ app.post('/campgrounds', async (req, res) => {
 })
 
 app.get('/campgrounds/:id', async (req, res) => {
-    try {const campgrounds = await Campground.findById(req.params.id);
-    res.render('campgrounds/show', { campgrounds })
-  }catch(e){
-    console.log('error on 59')
-  }
+    try {
+        const campgrounds = await Campground.findById(req.params.id);
+        res.render('campgrounds/show', { campgrounds })
+    } catch (e) {
+        console.log('error on 59')
+    }
 });
 
+
 app.get('/campgrounds/:id/edit', async (req, res) => {
-   try {const campgrounds = await Campground.findById(req.params.id);
-    res.render('campgrounds/edit', { campgrounds })
- }catch(e){
-    console.log("error 64")
- }
+    try {
+        const campgrounds = await Campground.findById(req.params.id);
+        res.render('campgrounds/edit', { campgrounds })
+    } catch (e) {
+        console.log("error 64")
+    }
 });
 
 app.put('/campgrounds/:id', async (req, res) => {
-   try{
-    const { id } = req.params;
-    const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
-    res.redirect(`/campgrounds/${campground._id}`)
-   }catch(e){
-    console.log(e);
-   }
-    
+    try {
+        const { id } = req.params;
+        const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
+        res.redirect(`/campgrounds/${campground._id}`)
+    } catch (e) {
+        console.log(e);
+    }
+
 });
 
 app.delete('/campgrounds/:id', async (req, res) => {
-    try{
+    try {
         const { id } = req.params;
-    const campground = await Campground.findByIdAndDelete(id);
-    res.redirect('/campgrounds/')
-    }catch(e){
+        const campground = await Campground.findByIdAndDelete(id);
+        res.redirect('/campgrounds/')
+    } catch (e) {
         console.log(e)
     }
 });
