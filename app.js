@@ -5,7 +5,8 @@ const mongooes = require('mongoose');
 const path = require('path')
 const methodOverride = require('method-override');
 const morgan = require('morgan');
-const ejsEngine = require('ejs-mate')
+const ejsEngine = require('ejs-mate');
+const catchAsync = require('./utils/catchAsync');
 
 
 mongooes.connect('mongodb://127.0.0.1:27017/yelpcamp')
@@ -40,20 +41,21 @@ app.get('/makecampground', async (req, res) => {
     res.render('home')
 });
 
-app.get('/campgrounds', async (req, res) => {
+app.get('/campgrounds', async (req, res ) => {
     const campgrounds = await Campground.find({});
     res.render('campgrounds/index', { campgrounds })
 });
 
 app.get('/campgrounds/new', async (req, res) => {
-    res.render('campgrounds/new')
+
+        res.render('campgrounds/new')
 });
 
-app.post('/campgrounds', async (req, res) => {
-    const campground = new Campground(req.body.campground);
+app.post('/campgrounds', catchAsync(async (req, res, next) => {
+const campground = new Campground(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`)
-})
+}))
 
 app.get('/campgrounds/:id', async (req, res) => {
     try {
@@ -94,6 +96,10 @@ app.delete('/campgrounds/:id', async (req, res) => {
         console.log(e)
     }
 });
+
+app.use((err, req, res, next)=>{
+    res.send("oh boy, something went wrong!" + err)
+})
 
 app.listen(port, () => {
     console.log(`connection open on port ${port}`)
