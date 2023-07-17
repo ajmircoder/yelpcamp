@@ -1,12 +1,14 @@
-// const { log } = require('console');
 const express = require('express');
 const Campground = require('./models/campground')
 const mongooes = require('mongoose');
-const path = require('path')
+const path = require('path');
 const methodOverride = require('method-override');
 const morgan = require('morgan');
 const ejsEngine = require('ejs-mate');
 const catchAsync = require('./utils/catchAsync');
+const AppError = require('./utils/ExpressError');
+const {campgroundSchema} = require('./validatorSchema')
+
 
 
 mongooes.connect('mongodb://127.0.0.1:27017/yelpcamp')
@@ -29,9 +31,20 @@ app.engine('ejs', ejsEngine)
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(morgan('tiny'))
 
 const port = process.env.port || 8000;
 
+const validateCampground = (req, res, next)=>{
+    
+    const { error } = campgroundSchema.validate(req.body);
+    if(error){
+        const msg = error.details.map(el => el.message).join(',')
+        throw new AppError(msg, 400)
+    } else{
+        next();
+    }
+}
 
 app.get('/', (req, res) => {
     res.render('home')
@@ -41,64 +54,54 @@ app.get('/makecampground', async (req, res) => {
     res.render('home')
 });
 
-app.get('/campgrounds', async (req, res ) => {
+app.get('/campgrounds', catchAsync(async (req, res) => {
     const campgrounds = await Campground.find({});
     res.render('campgrounds/index', { campgrounds })
-});
+}));
 
 app.get('/campgrounds/new', async (req, res) => {
-
-        res.render('campgrounds/new')
+    res.render('campgrounds/new')
 });
 
-app.post('/campgrounds', catchAsync(async (req, res, next) => {
-const campground = new Campground(req.body.campground);
+app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) => {
+    // if(!req.body.campground) throw new AppError('invalid Campground Data', 400);
+
+    const campground = new Campground(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`)
 }))
 
-app.get('/campgrounds/:id', async (req, res) => {
-    try {
-        const campgrounds = await Campground.findById(req.params.id);
-        res.render('campgrounds/show', { campgrounds })
-    } catch (e) {
-        console.log('error on 59')
-    }
-});
+app.get('/campgrounds/:id', catchAsync(async (req, res) => {
+    const campgrounds = await Campground.findById(req.params.id);
+    res.render('campgrounds/show', { campgrounds })
+}));
 
 
-app.get('/campgrounds/:id/edit', async (req, res) => {
-    try {
-        const campgrounds = await Campground.findById(req.params.id);
-        res.render('campgrounds/edit', { campgrounds })
-    } catch (e) {
-        console.log("error 64")
-    }
-});
+app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
+    const campgrounds = await Campground.findById(req.params.id);
+    res.render('campgrounds/edit', { campgrounds })
+}));
 
-app.put('/campgrounds/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
-        res.redirect(`/campgrounds/${campground._id}`)
-    } catch (e) {
-        console.log(e);
-    }
+app.put('/campgrounds/:id', validateCampground, catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
+    res.redirect(`/campgrounds/${campground._id}`)
+}));
 
-});
+app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const campground = await Campground.findByIdAndDelete(id);
+    res.redirect('/campgrounds/')
+}));
 
-app.delete('/campgrounds/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const campground = await Campground.findByIdAndDelete(id);
-        res.redirect('/campgrounds/')
-    } catch (e) {
-        console.log(e)
-    }
-});
+app.all('*', catchAsync(async (req, res, next) => {
+    next(new AppError('Oh Boy Page Not Found', 404))
+}))
 
-app.use((err, req, res, next)=>{
-    res.send("oh boy, something went wrong!" + err)
+app.use((err, req, res, next) => {
+    const{statusCode = 404,} = err;
+    if(!err.message) err.message = 'oh no something went wrong'
+    res.status(statusCode).render('error', {err})
 })
 
 app.listen(port, () => {

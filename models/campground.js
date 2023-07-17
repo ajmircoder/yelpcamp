@@ -4,19 +4,19 @@ const Schema = mongooes.Schema;
 const CampgroundSchema = new Schema({
     title: {
         type: String,
-        required: true
+        // required: true
     },
     price: {
         type:Number,
-        required: true
+        // required: true
     },
     description: {
         type:String,
-        required: true
+        // required: true
     },
     location:{
         type:String,
-        required: true
+        // required: true
     },
     rank :{
         type:String,
@@ -24,11 +24,11 @@ const CampgroundSchema = new Schema({
     },
     state: {
         type:String,
-        required: true
+        // required: true
     },
     img: {
         type:String,
-        required: true
+        // required: true
     }
 });
 
