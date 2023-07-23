@@ -7,7 +7,8 @@ const morgan = require('morgan');
 const ejsEngine = require('ejs-mate');
 const catchAsync = require('./utils/catchAsync');
 const AppError = require('./utils/ExpressError');
-const {campgroundSchema} = require('./validatorSchema')
+const {campgroundSchema} = require('./validatorSchema');
+const review = require('./models/review');
 
 
 
@@ -65,7 +66,6 @@ app.get('/campgrounds/new', async (req, res) => {
 
 app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) => {
     // if(!req.body.campground) throw new AppError('invalid Campground Data', 400);
-
     const campground = new Campground(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`)

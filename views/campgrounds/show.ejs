@@ -21,6 +21,9 @@
                     <p class="card-text">
                         <%= campgrounds.description %>
                     </p>
+                    <h5 class="card-title">
+                        <%= campgrounds.price %>
+                    </h5>
                     <a href="/campgrounds/<%= campgrounds._id %>/edit" class="btn btn-primary mb-2">Edit</a>
                     <a href="/campgrounds" class="btn btn-success mb-2">All Campgrounds</a>
                     <form action="/campgrounds/<%= campgrounds._id %>?_method=DELETE" method="post">
