@@ -7,7 +7,8 @@ const morgan = require('morgan');
 const ejsEngine = require('ejs-mate');
 const catchAsync = require('./utils/catchAsync');
 const AppError = require('./utils/ExpressError');
-const {campgroundSchema} = require('./validatorSchema')
+const { campgroundSchema } = require('./validatorSchema');
+const Review  = require('./models/review');
 
 
 
@@ -31,7 +32,7 @@ app.engine('ejs', ejsEngine)
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-app.use(morgan('tiny'))
+// app.use(morgan('tiny'))
 
 const port = process.env.port || 8000;
 
@@ -64,8 +65,7 @@ app.get('/campgrounds/new', async (req, res) => {
 });
 
 app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) => {
-    // if(!req.body.campground) throw new AppError('invalid Campground Data', 400);
-
+    if(!req.body.campground) throw new AppError('invalid Campground Data', 400);
     const campground = new Campground(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`)
@@ -74,6 +74,15 @@ app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) =
 app.get('/campgrounds/:id', catchAsync(async (req, res) => {
     const campgrounds = await Campground.findById(req.params.id);
     res.render('campgrounds/show', { campgrounds })
+}));
+
+app.post('/campgrounds/:id/reviews', catchAsync(async (req, res) => {
+    const campgrounds = await Campground.findById(req.params.id);
+    const reviews = await new Review(req.body.review);
+    campgrounds.reviews.push(reviews);
+    await reviews.save();
+    await campgrounds.save();
+    res.redirect(`/campgrounds/${campgrounds._id}`)
 }));
 
 

@@ -4,32 +4,29 @@ const Schema = mongooes.Schema;
 const CampgroundSchema = new Schema({
     title: {
         type: String,
-        // required: true
     },
     price: {
-        type:Number,
-        // required: true
+        type: Number,
     },
     description: {
-        type:String,
-        // required: true
+        type: String,
     },
-    location:{
-        type:String,
-        // required: true
+    location: {
+        type: String,
     },
-    rank :{
-        type:String,
-        // required: true
+    rank: {
+        type: String,
     },
     state: {
-        type:String,
-        // required: true
+        type: String,
     },
     img: {
-        type:String,
-        // required: true
-    }
+        type: String,
+    },
+    reviews: [{
+        type: Schema.Types.ObjectId,
+        ref: "Review"
+    }]
 });
 
 module.exports = mongooes.model('Campground', CampgroundSchema);
