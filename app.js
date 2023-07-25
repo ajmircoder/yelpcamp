@@ -7,7 +7,7 @@ const morgan = require('morgan');
 const ejsEngine = require('ejs-mate');
 const catchAsync = require('./utils/catchAsync');
 const AppError = require('./utils/ExpressError');
-const { campgroundSchema } = require('./validatorSchema');
+const { campgroundSchema, reviewSchema } = require('./validatorSchema');
 const Review  = require('./models/review');
 
 
@@ -45,6 +45,16 @@ const validateCampground = (req, res, next)=>{
     } else{
         next();
     }
+};
+const validateReview = (req, res, next)=>{
+    
+    const { error } = reviewSchema.validate(req.body);
+    if(error){
+        const msg = error.details.map(el => el.message).join(',')
+        throw new AppError(msg, 400)
+    } else{
+        next();
+    }
 }
 
 app.get('/', (req, res) => {
@@ -73,10 +83,11 @@ app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) =
 
 app.get('/campgrounds/:id', catchAsync(async (req, res) => {
     const campgrounds = await Campground.findById(req.params.id);
-    res.render('campgrounds/show', { campgrounds })
+    const allReviews = ((await campgrounds.populate('reviews')).reviews);
+    res.render('campgrounds/show', { campgrounds, allReviews })
 }));
 
-app.post('/campgrounds/:id/reviews', catchAsync(async (req, res) => {
+app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res) => {
     const campgrounds = await Campground.findById(req.params.id);
     const reviews = await new Review(req.body.review);
     campgrounds.reviews.push(reviews);
