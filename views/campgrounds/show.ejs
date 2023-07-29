@@ -79,7 +79,7 @@
                 const revId = btn.getAttribute("data-rev");
                 const campId = btn.getAttribute('data-camp')
 
-                fetch(`/campgrounds/${campId}/reviews/${revId}?_method=DELETE`, {
+                fetch(`/campgrounds/${campId}/reviews/${revId}/delete?_method=DELETE`, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
