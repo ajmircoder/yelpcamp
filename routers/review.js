@@ -34,8 +34,9 @@ router.get('/:reviewId/edit', catchAsync(async (req, res) => {
 }))
 
 router.delete('/:reviewId/delete', catchAsync(async (req, res, next) => {
-    const campgrounds = await Campground.findById(req.params.id);
-    await Review.findByIdAndDelete(req.params.reviewId)
+    const { id, reviewId } = req.params;
+    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId)
     res.send({ message: "success" });
     // res.redirect(`/campgrounds/${campgrounds._id}`)
 
