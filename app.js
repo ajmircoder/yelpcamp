@@ -9,7 +9,8 @@ const AppError = require('./utils/ExpressError');
 const campgrounds = require('./routers/campgrounds');
 const reviews = require('./routers/review');
 const Campground = require('./models/campgroundSchema');
-const session = require('express-session')
+const session = require('express-session');
+const flash = require('connect-flash');
 
 mongooes.connect('mongodb://127.0.0.1:27017/yelpcamp')
     .then(() => {
