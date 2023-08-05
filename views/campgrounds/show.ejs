@@ -1,8 +1,6 @@
 <% layout('/layouts/boilerplate') %>
     <div class="row">
-
         <div class="col-6 mb-2">
-
             <div class="card" style="width: 30vw;">
                 <h1 class="text-center">
                     <%= campgrounds.title %>
@@ -60,10 +58,11 @@
                                 Review: <%= review.body %>
                             </li>
                         </h3>
-                    <button  data-rev="<%= review._id %>" data-camp="<%= campgrounds._id %>" style="width: 7rem;" class=" btn btn-danger mb-2 del-btn">DELETE</button>
-                    <form action="/campgrounds/<%=campgrounds._id%>/reviews/<%=review._id%>/edit">
-                        <button style="width: 7rem;" class=" btn btn-primary mb-2 edit">edit</button>
-                    </form>
+                        <button data-rev="<%= review._id %>" data-camp="<%= campgrounds._id %>" style="width: 7rem;"
+                            class=" btn btn-danger mb-2 del-btn">DELETE</button>
+                        <form action="/campgrounds/<%=campgrounds._id%>/reviews/<%=review._id%>/edit">
+                            <button style="width: 7rem;" class=" btn btn-primary mb-2 edit">edit</button>
+                        </form>
                     </ul>
 
                     <% } %>
