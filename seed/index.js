@@ -1,4 +1,4 @@
-const Campground = require('../models/campground')
+const Campground = require('../models/campgroundSchema');
 const mongooes = require('mongoose');
 const cities = require('./cities')
 const { places, descriptors } = require('./seedHelpers')
@@ -21,7 +21,6 @@ const seedDB = async () => {
         for (let i = 0; i < 50; i++) {
             const random = Math.floor(Math.random() * 1000);
             const camp = new Campground({
-
                 price: random,
                 description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel eos doloremque consectetur illum, mollitia suscipit autem aspernatur, delectus, optio quod quo! Asperiores nemo neque quos provident ratione ab, pariatur laborum!",
                 location: `${cities[random].city}`,

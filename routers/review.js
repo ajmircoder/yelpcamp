@@ -5,6 +5,7 @@ const catchAsync = require('../utils/catchAsync');
 const Campground = require('../models/campgroundSchema');
 const Review = require('../models/reviewSchema');
 const AppError = require('../utils/ExpressError');
+const {islogIn} = require('../middleware');
 
 
 const validateReview = (req, res, next) => {
@@ -18,12 +19,13 @@ const validateReview = (req, res, next) => {
     }
 }
 
-router.post('/', validateReview, catchAsync(async (req, res) => {
+router.post('/', islogIn, validateReview, catchAsync(async (req, res) => {
     const campgrounds = await Campground.findById(req.params.id);
     const reviews = await new Review(req.body.review);
     campgrounds.reviews.push(reviews);
     await reviews.save();
     await campgrounds.save();
+    req.flash('success', 'Thanks for the review')
     res.redirect(`/campgrounds/${campgrounds._id}`)
 }));
 
