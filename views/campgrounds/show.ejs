@@ -2,9 +2,12 @@
     <div class="row">
         <div class="col-6 mb-2">
             <div class="card" style="width: 30vw;">
-                <h1 class="text-center">
+                <h2 class="text-center" style="color:red">
+                    <u><%=`Camp by ${author.name}` %></u>
+                </h2>
+                <h3 class="text-center">
                     <%= campgrounds.title %>
-                </h1>
+                </h3>
                 <img src="<%=campgrounds.img %>" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">
@@ -23,11 +26,13 @@
                     <h5 class="card-title">
                         <%= campgrounds.price %>
                     </h5>
+                    <% if(currentUser && campgrounds.author.equals(currentUser._id)) {%>
                     <a href="/campgrounds/<%= campgrounds._id %>/edit" class="btn btn-primary mb-2">Edit</a>
-                    <a href="/campgrounds" class="btn btn-success mb-2">All Campgrounds</a>
-                    <form action="/campgrounds/<%= campgrounds._id %>?_method=DELETE" method="post">
-                        <button class="btn btn-danger">Delete</button>
+                    <form action="/campgrounds/<%= campgrounds._id %>/delete?_method=DELETE" method="post">
+                        <button class="btn btn-danger mb-2">Delete</button>
                     </form>
+                    <% } %>
+                    <a href="/campgrounds" class="btn btn-success ">All Campgrounds</a>
                 </div>
             </div>
         </div>
@@ -38,7 +43,7 @@
                 </u>
                 <div class="mb-3">
                     <label class="form-label" for="rating">Rating</label>
-                    <input required name="review[rating]" class="form-range" min="1" max="5" type="range" id="rating">
+                    <input required name="review[rating]" class="form-range" min="1" max="5" type="range" id="rating" value="1">
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="body">Review</label>
@@ -50,19 +55,25 @@
                 <% for(let review of allReviews){%>
                     <ul class="card" id="<%= review._id %>">
                         <h3 style="margin: 0;">
-
+                            <% if(review.author) {%>
+                            <li>
+                                Name: <%= review.author.name %>
+                            </li>
+                            <% } %>
                             <li>
                                 Rating: <%= review.rating %> *
                             </li>
                             <li>
                                 Review: <%= review.body %>
                             </li>
-                        </h3>
+                        </h3>  
+                    <% if(currentUser && review.author.equals(currentUser._id)) {%>
                         <button data-rev="<%= review._id %>" data-camp="<%= campgrounds._id %>" style="width: 7rem;"
                             class=" btn btn-danger mb-2 del-btn">DELETE</button>
                         <form action="/campgrounds/<%=campgrounds._id%>/reviews/<%=review._id%>/edit">
                             <button style="width: 7rem;" class=" btn btn-primary mb-2 edit">edit</button>
                         </form>
+                        <% } %>
                     </ul>
 
                     <% } %>

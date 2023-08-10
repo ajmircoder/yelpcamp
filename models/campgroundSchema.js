@@ -24,14 +24,18 @@ const CampgroundSchema = new Schema({
     img: {
         type: String,
     },
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     reviews: [{
         type: Schema.Types.ObjectId,
         ref: "Review"
     }]
 });
 
-CampgroundSchema.post('findOneAndDelete', async(doc)=>{
-    if(doc){
+CampgroundSchema.post('findOneAndDelete', async (doc) => {
+    if (doc) {
         await Review.deleteMany({
             _id: {
                 $in: doc.reviews
@@ -39,4 +43,13 @@ CampgroundSchema.post('findOneAndDelete', async(doc)=>{
         })
     }
 })
+var autoPopulateLead = function (next) {
+    this.populate('author');
+    next();
+};
+
+CampgroundSchema.
+    pre('findOne', autoPopulateLead).
+    pre('findById', autoPopulateLead);
+
 module.exports = mongooes.model('Campground', CampgroundSchema);
