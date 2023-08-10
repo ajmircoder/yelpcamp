@@ -1,9 +1,11 @@
 const Campground = require('../models/campgroundSchema');
-const mongooes = require('mongoose');
+const mongoose = require('mongoose');
 const cities = require('./cities')
-const { places, descriptors } = require('./seedHelpers')
+const { places, descriptors } = require('./seedHelpers');
+const Review = require('../models/reviewSchema');
+const User = require('../models/userSchema')
 
-mongooes.connect('mongodb://127.0.0.1:27017/yelpcamp')
+mongoose.connect('mongodb://127.0.0.1:27017/yelpcamp')
     .then(() => {
         console.log("openn mongooesss on seed")
     }).catch((e) => {
@@ -17,10 +19,14 @@ const sample = array => array[Math.floor(Math.random() * array.length)]
 const seedDB = async () => {
 
     try {
-        await Campground.deleteMany({})
+        await Campground.deleteMany({});
+        await Review.deleteMany({});
+        const users = await User.findOne();
+        console.log(users);
         for (let i = 0; i < 50; i++) {
             const random = Math.floor(Math.random() * 1000);
             const camp = new Campground({
+                author : users._id,
                 price: random,
                 description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel eos doloremque consectetur illum, mollitia suscipit autem aspernatur, delectus, optio quod quo! Asperiores nemo neque quos provident ratione ab, pariatur laborum!",
                 location: `${cities[random].city}`,
@@ -37,7 +43,7 @@ const seedDB = async () => {
 
 }
 seedDB().then(() => {
-    console.log('hahahahh')
+    mongoose.connection.close();
 }).catch((e) => {
     console.log(`error in line 39 ${e}`)
 })

@@ -5,11 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js -e js,ejs",
-    "makeCamp": "node seed/index.js"
+    "dev": "nodemon app.js -e js,ejs"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ajmir Khan",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

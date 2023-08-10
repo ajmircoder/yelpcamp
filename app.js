@@ -60,13 +60,6 @@ res.locals.error = req.flash('error')
 next();
 })
 
-app.get('/fakeUser', catchAsync(async(req, res)=>{
-    const user = new User ({email:'ariffdafdfasfdf@gmail.com', username: 'aradfafadif'});
-    const newUser = await User.register(user, 'ajmir');
-    user.save();
-    res.send(newUser)
-}))
-
 app.use('/', userRoutes)
 app.use('/campgrounds', campgroundsRoutes);
 app.use('/campgrounds/:id/reviews', reviewsRoutes);
