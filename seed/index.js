@@ -32,13 +32,17 @@ const seedDB = async () => {
                 rank: `${cities[random].rank}`,
                 state: `${cities[random].state}`,
                 title: `${sample(descriptors)} ${sample(places)}`,
+                geometry: {
+                    type: "Point",
+                    coordinates: [ cities[random].longitude, cities[random].latitude ]
+                },
                 images: [
                     {
-                      url: 'https://res.cloudinary.com/dvtmj0rui/image/upload/v1691993297/YelpCamp/pcw3idikjaxcecsh7ki5.jpg',
+                      url: 'https://res.cloudinary.com/dvtmj0rui/image/upload/v1691993297/YelpCamp/main.jpg',
                       filename: 'YelpCamp/pcw3idikjaxcecsh7ki5',
                     },
                     {
-                      url: 'https://res.cloudinary.com/dvtmj0rui/image/upload/v1691993297/YelpCamp/fmh5gy0esrism6qfmxbh.jpg',
+                      url: 'https://res.cloudinary.com/dvtmj0rui/image/upload/v1691993297/YelpCamp/main2.jpg',
                       filename: 'YelpCamp/fmh5gy0esrism6qfmxbh',
                     }
                   ]

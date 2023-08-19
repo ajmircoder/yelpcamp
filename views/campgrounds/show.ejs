@@ -8,6 +8,7 @@
                         <%=`Camp by ${author.name}` %>
                     </u>
                 </h2>
+               <div id='map' style='width: 320px; height: 300px;'></div>
                 <h3 class="text-center">
                     <%= campground.title %>
                 </h3>
@@ -83,7 +84,7 @@
                     <label class="form-label" for="rating">Rating</label>
                     <fieldset class="starability-basic">
                         <legend>First rating:</legend>
-                        <input type="radio" id="no-rate" class="input-no-rate" name="Review[rating]" value="0" checked
+                        <input type="radio" id="no-rate" class="input-no-rate" name="Review[rating]" value="1" checked
                             aria-label="No rating." />
                         <input type="radio" id="first-rate1" name="Review[rating]" value="1" />
                         <label for="first-rate1" title="Terrible">1 star</label>
@@ -158,6 +159,9 @@
             }
 
         }
-
-
     </script>
+    <script>
+        const token = '<%-process.env.MAPBOX_TOKEN%>';
+        const campground = <%- JSON.stringify(campground)%>;
+    </script>
+    <script src="/javascript/showPageMap.js"></script>
