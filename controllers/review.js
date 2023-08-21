@@ -23,8 +23,7 @@ module.exports.destroyReview = async (req, res, next) => {
     const { id, reviewId } = req.params;
     await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
-    res.send({ message: "success" });
-    
+    res.redirect(`/campgrounds/${id}`);
 }
 
 module.exports.editReview = async (req, res) => {
