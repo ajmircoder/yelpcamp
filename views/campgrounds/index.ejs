@@ -1,15 +1,15 @@
 <% layout('/layouts/boilerplate') %>
+<h1 class="text-center" style="font-size: 50px; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">all Campgrounds</h1>
     <div id="map" style="width: 100%; height: 500px;">
     </div>
-    <h1 class="text-center m-2">all Campgrounds</h1>
         <% for(let campground of campgrounds) { %>
-            <div class="card p-2">
+            <div class="card p-2 mb-2">
                 <div class="row">
                     <div class="col-md-4">
                         <% if(campground.images.length) {%>
-                        <img src="<%=campground.images[0].url%>" style="width: 300px; height: 300px;" class="img-fluid" alt="">
+                        <img crossorigin="anonymous" src="<%=campground.images[0].url%>" style="width: 300px; height: 300px;" class="img-fluid" alt="">
                         <% }else{ %>
-                            <img style="width: 300px;" src="https://images.pexels.com/photos/1574843/pexels-photo-1574843.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
+                            <img crossorigin="anonymous" style="width: 300px;" src="https://images.pexels.com/photos/1574843/pexels-photo-1574843.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
                             <% } %>
                     </div>
                     <div class="col-md-8">
