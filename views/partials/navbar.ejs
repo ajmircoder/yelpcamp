@@ -13,7 +13,7 @@
           <a class="nav-link active" href="/campgrounds">All campgrounds</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="/campgrounds/new">New campgrounds</a>
+          <a class="nav-link active" href="/campgrounds/new">New campground</a>
         </li>
       </ul>
     </div>
@@ -21,9 +21,13 @@
   <div class="navbar-nav ms-auto collapse navbar-collapse" id="navbarText">
     <% if(!currentUser) {%>
       <a class="nav-link" href="/login">Login</a>
-      <a class="nav-link" href="/register">Register</a> 
-      <% }else{ %>          
-      <a class="nav-link" href="/logout">Logout</a> 
-      <% } %>
-  </div>
+      <a class="nav-link" href="/register">Register</a>
+    
+      <% } else{ %>
+        <a style="font-size: 20px; margin: 0 10px; padding: 5px;color: white; text-decoration: none;"
+          class="nav-link active" href="/logout"
+          onmouseover="this.style.color='#f00'; this.style.textDecoration='underline';"
+          onmouseout="this.style.color='white'; this.style.textDecoration='none';">Logout</a>
+        <% } %>
+        </div>
 </nav>

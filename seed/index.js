@@ -22,7 +22,6 @@ const seedDB = async () => {
         await Campground.deleteMany({});
         await Review.deleteMany({});
         const users = await User.findOne();
-        console.log(users);
         for (let i = 0; i < 50; i++) {
             const random = Math.floor(Math.random() * 1000);
             const camp = new Campground({
@@ -32,8 +31,21 @@ const seedDB = async () => {
                 location: `${cities[random].city}`,
                 rank: `${cities[random].rank}`,
                 state: `${cities[random].state}`,
-                img: "https://source.unsplash.com/collection/483251",
                 title: `${sample(descriptors)} ${sample(places)}`,
+                geometry: {
+                    type: "Point",
+                    coordinates: [ cities[random].longitude, cities[random].latitude ]
+                },
+                images: [
+                    {
+                      url: 'https://res.cloudinary.com/dvtmj0rui/image/upload/v1691993297/YelpCamp/main.jpg',
+                      filename: 'YelpCamp/pcw3idikjaxcecsh7ki5',
+                    },
+                    {
+                      url: 'https://res.cloudinary.com/dvtmj0rui/image/upload/v1691993297/YelpCamp/main2.jpg',
+                      filename: 'YelpCamp/fmh5gy0esrism6qfmxbh',
+                    }
+                  ]
             })
             await camp.save();
         }
